@@ -16,6 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Comparator;
+import java.util.Dictionary;
 import java.util.List;
 
 
@@ -101,6 +103,26 @@ public class ProductController {
     public List<Product>  testeDeRequetes(@PathVariable int prix) {
 
         return productDao.chercherUnProduitCher(400);
+    }
+
+    @GetMapping(value = "/Produits/Marge/{id}")
+    public int calculerMargeProduit(@PathVariable int id){
+
+        Product produit = productDao.findById(id);
+
+        return produit.getPrix() - produit.getPrixAchat();
+    }
+
+    @GetMapping(value = "/ProduitsABC")
+    public List<Product> trierProduitsParOrdreAlphabetique(){
+        
+        List<Product> produits = productDao.findAll();
+        produits.sort(new Comparator<Product>() {
+            public int compare(Product p1, Product p2){
+                return p1.getNom().compareTo(p2.getNom());
+            }
+        });
+        return produits;
     }
 
 
