@@ -18,7 +18,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Api( description="API pour es opérations CRUD sur les produits.")
@@ -105,13 +107,21 @@ public class ProductController {
         return productDao.chercherUnProduitCher(400);
     }
 
-    @GetMapping(value = "/Produits/Marge/{id}")
-    public int calculerMargeProduit(@PathVariable int id){
+    @GetMapping(value = "/AdminProduits")
+    public Map<Product,Integer> calculerMargeProduit(){
 
-        Product produit = productDao.findById(id);
+        List<Product> produits = productDao.findAll();
+        Map<Product,Integer> dico = new HashMap<Product,Integer>();
 
-        return produit.getPrix() - produit.getPrixAchat();
-    }
+        for (Product p : produits) {
+            dico.put(p, p.getPrix()-p.getPrixAchat());
+        }
+
+        return dico;
+            
+        }
+
+    
 
     @GetMapping(value = "/ProduitsABC")
     public List<Product> trierProduitsParOrdreAlphabetique(){
